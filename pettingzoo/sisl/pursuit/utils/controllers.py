@@ -1,5 +1,3 @@
-import abc
-
 import numpy as np
 
 #################################################################
@@ -7,13 +5,8 @@ import numpy as np
 #################################################################
 
 
-class PursuitPolicy(abc.ABC):
-    @abc.abstractmethod
-    def act(self, state: np.ndarray) -> int:
-        raise NotImplementedError
+class RandomPolicy:
 
-
-class RandomPolicy(PursuitPolicy):
     # constructor
     def __init__(self, n_actions, rng):
         self.rng = rng
@@ -23,10 +16,11 @@ class RandomPolicy(PursuitPolicy):
         self.rng = rng
 
     def act(self, state):
-        return self.rng.integers(self.n_actions)
+        return self.rng.randint(self.n_actions)
 
 
-class SingleActionPolicy(PursuitPolicy):
+class SingleActionPolicy:
+
     def __init__(self, a):
         self.action = a
 

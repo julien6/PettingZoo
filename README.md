@@ -1,73 +1,58 @@
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
 <p align="center">
-    <a href = "https://pettingzoo.farama.org/" target = "_blank"><img src="https://raw.githubusercontent.com/Farama-Foundation/PettingZoo/master/pettingzoo-text.png" width="500px"/> </a>
+    <img src="PettingZoo_Text.png" width="500px"/>
 </p>
 
-PettingZoo is a Python library for conducting research in multi-agent reinforcement learning, akin to a multi-agent version of [Gymnasium](https://github.com/Farama-Foundation/Gymnasium).
+PettingZoo is a Python library for conducting research in multi-agent reinforcement learning. It's akin to a multi-agent version of OpenAI's Gym library.
 
-The documentation website is at [pettingzoo.farama.org](https://pettingzoo.farama.org) and we have a public discord server (which we also use to coordinate development work) that you can join here: https://discord.gg/nhvKkYa6qX
+Our website, with comprehensive documentation, is [pettingzoo.ml](https://www.pettingzoo.ml)
 
-## Environments
+## Environments and Installation
 
 PettingZoo includes the following families of environments:
 
-* [Atari](https://pettingzoo.farama.org/environments/atari/): Multi-player Atari 2600 games (cooperative, competitive and mixed sum)
-* [Butterfly](https://pettingzoo.farama.org/environments/butterfly): Cooperative graphical games developed by us, requiring a high degree of coordination
-* [Classic](https://pettingzoo.farama.org/environments/classic): Classical games including card games, board games, etc.
-* [MPE](https://pettingzoo.farama.org/environments/mpe): A set of simple nongraphical communication tasks, originally from https://github.com/openai/multiagent-particle-envs
-* [SISL](https://pettingzoo.farama.org/environments/sisl): 3 cooperative environments, originally from https://github.com/sisl/MADRL
+* [Atari](https://www.pettingzoo.ml/atari): Multi-player Atari 2600 games (cooperative, competitive and mixed sum)
+* [Butterfly](https://www.pettingzoo.ml/butterfly): Cooperative graphical games developed by us, requiring a high degree of coordination
+* [Classic](https://www.pettingzoo.ml/classic): Classical games including card games, board games, etc.
+* [MAgent](https://www.pettingzoo.ml/magent): Configurable environments with massive numbers of particle agents, originally from https://github.com/geek-ai/MAgent
+* [MPE](https://www.pettingzoo.ml/mpe): A set of simple nongraphical communication tasks, originally from https://github.com/openai/multiagent-particle-envs
+* [SISL](https://www.pettingzoo.ml/sisl): 3 cooperative environments, originally from https://github.com/sisl/MADRL
 
-## Installation
+To install the pettingzoo base library, use `pip install pettingzoo`
 
-To install the base PettingZoo library: `pip install pettingzoo`.
+This does not include dependencies for all families of environments (there's a massive number, and some can be problematic to install on certain systems). You can install these dependencies for one family like `pip install pettingzoo[atari]` or use `pip install pettingzoo[all]` to install all dependencies.
 
-This does not include dependencies for all families of environments (some environments can be problematic to install on certain systems).
-
-To install the dependencies for one family, use `pip install 'pettingzoo[atari]'`, or use `pip install 'pettingzoo[all]'` to install all dependencies.
-
-We support and maintain PettingZoo for Python 3.9, 3.10, 3.11, and 3.12 on Linux and macOS. We will accept PRs related to Windows, but do not officially support it.
-
-Note: Some Linux distributions may require manual installation of `cmake`, `swig`, or `zlib1g-dev` (e.g., `sudo apt install cmake swig zlib1g-dev`)
-
-## Getting started
-
-For an introduction to PettingZoo, see [Basic Usage](https://pettingzoo.farama.org/content/basic_usage/). To create a new environment, see our [Environment Creation Tutorial](https://pettingzoo.farama.org/tutorials/custom_environment/1-project-structure/) and [Custom Environment Examples](https://pettingzoo.farama.org/content/environment_creation/).
-For examples of training RL models using PettingZoo see our tutorials:
-* [CleanRL: Implementing PPO](https://pettingzoo.farama.org/tutorials/cleanrl/implementing_PPO/): train multiple PPO agents in the [Pistonball](https://pettingzoo.farama.org/environments/butterfly/pistonball/) environment.
-* [Tianshou: Training Agents](https://pettingzoo.farama.org/tutorials/tianshou/intermediate/): train DQN agents in the [Tic-Tac-Toe](https://pettingzoo.farama.org/environments/classic/tictactoe/) environment.
-* [AgileRL: Training, Curriculums and Self-play](https://pettingzoo.farama.org/main/tutorials/agilerl/DQN/): train agents with curriculum learning and self-play in the [Connect Four](https://pettingzoo.farama.org/environments/classic/connect_four/) environment.
+We support Python 3.6, 3.7, 3.8 and 3.9 on Linux and macOS. We will accept PRs related to Windows, but do not officially support it.
 
 ## API
 
 PettingZoo model environments as [*Agent Environment Cycle* (AEC) games](https://arxiv.org/pdf/2009.14471.pdf), in order to be able to cleanly support all types of multi-agent RL environments under one API and to minimize the potential for certain classes of common bugs.
 
-Using environments in PettingZoo is very similar to Gymnasium, i.e. you initialize an environment via:
+Using environments in PettingZoo is very similar to Gym, i.e. you initialize an environment via:
 
 ```python
-from pettingzoo.butterfly import pistonball_v6
-env = pistonball_v6.env()
+from pettingzoo.butterfly import pistonball_v4
+env = pistonball_v4.env()
 ```
 
-Environments can be interacted with in a manner very similar to Gymnasium:
+Environments can be interacted with in a manner very similar to Gym:
 
 ```python
 env.reset()
 for agent in env.agent_iter():
-    observation, reward, termination, truncation, info = env.last()
-    action = None if termination or truncation else env.action_space(agent).sample()  # this is where you would insert your policy
+    observation, reward, done, info = env.last()
+    action = policy(observation)
     env.step(action)
 ```
 
-For the complete API documentation, please see https://pettingzoo.farama.org/api/aec/
+For the complete API documentation, please see https://www.pettingzoo.ml/api
 
 ### Parallel API
 
-In certain environments, it's a valid to assume that agents take their actions at the same time. For these games, we offer a secondary API to allow for parallel actions, documented at https://pettingzoo.farama.org/api/parallel/
+In certain environments, it's a valid to assume that agents take their actions at the same time. For these games, we offer a secondary API to allow for parallel actions, documented at https://www.pettingzoo.ml/api#parallel-api
 
 ## SuperSuit
 
-SuperSuit is a library that includes all commonly used wrappers in RL (frame stacking, observation, normalization, etc.) for PettingZoo and Gymnasium environments with a nice API. We developed it in lieu of wrappers built into PettingZoo. https://github.com/Farama-Foundation/SuperSuit
+SuperSuit is a library that includes all commonly used wrappers in RL (frame stacking, observation, normalization, etc.) for PettingZoo and Gym environments with a nice API. We developed it in lieu of wrappers built into PettingZoo. https://github.com/PettingZoo-Team/SuperSuit
 
 ## Environment Versioning
 
@@ -78,17 +63,10 @@ PettingZoo keeps strict versioning for reproducibility reasons. All environments
 To cite this project in publication, please use
 
 ```
-@article{terry2021pettingzoo,
-  title={Pettingzoo: Gym for multi-agent reinforcement learning},
-  author={Terry, J and Black, Benjamin and Grammel, Nathaniel and Jayakumar, Mario and Hari, Ananth and Sullivan, Ryan and Santos, Luis S and Dieffendahl, Clemens and Horsch, Caroline and Perez-Vicente, Rodrigo and others},
-  journal={Advances in Neural Information Processing Systems},
-  volume={34},
-  pages={15032--15043},
-  year={2021}
+@article{terry2020pettingzoo,
+  Title = {PettingZoo: Gym for Multi-Agent Reinforcement Learning},
+  Author = {Terry, J. K and Black, Benjamin and Grammel, Nathaniel and Jayakumar, Mario and Hari, Ananth and Sulivan, Ryan and Santos, Luis and Perez, Rodrigo and Horsch, Caroline and Dieffendahl, Clemens and Williams, Niall L and Lokesh, Yashas and Sullivan, Ryan and Ravi, Praveen},
+  journal={arXiv preprint arXiv:2009.14471},
+  year={2020}
 }
 ```
-
-## Project Maintainers
-- Project Manager: [David Gerard](https://github.com/David-GERARD) - `david.gerard.23@ucl.ac.uk`
-- Maintainer: [Albert Han](https://github.com/yjhan96) - `yjhan96@gmail.com`.
-- Maintenance for this project is also contributed by the broader Farama team: [farama.org/team](https://farama.org/team).

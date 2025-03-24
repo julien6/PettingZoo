@@ -1,7 +1,7 @@
 import numpy as np
-from gymnasium import spaces
+from gym import spaces
 
-from pettingzoo.sisl._utils import Agent
+from ..._utils import Agent
 
 #################################################################
 # Implements the Single 2D Agent Dynamics
@@ -9,18 +9,9 @@ from pettingzoo.sisl._utils import Agent
 
 
 class DiscreteAgent(Agent):
+
     # constructor
-    def __init__(
-        self,
-        xs,
-        ys,
-        map_matrix,
-        randomizer,
-        obs_range=3,
-        n_channels=3,
-        seed=1,
-        flatten=False,
-    ):
+    def __init__(self, xs, ys, map_matrix, randomizer, obs_range=3, n_channels=3, seed=1, flatten=False):
         # map_matrix is the may of the environment (-1 are buildings)
         # n channels is the number of observation channels
 
@@ -29,15 +20,17 @@ class DiscreteAgent(Agent):
         self.xs = xs
         self.ys = ys
 
-        self.eactions = [
-            0,  # move left
-            1,  # move right
-            2,  # move up
-            3,  # move down
-            4,
-        ]  # stay
+        self.eactions = [0,  # move left
+                         1,  # move right
+                         2,  # move up
+                         3,  # move down
+                         4]  # stay
 
-        self.motion_range = [[-1, 0], [1, 0], [0, 1], [0, -1], [0, 0]]
+        self.motion_range = [[-1, 0],
+                             [1, 0],
+                             [0, 1],
+                             [0, -1],
+                             [0, 0]]
 
         self.current_pos = np.zeros(2, dtype=np.int32)  # x and y position
         self.last_pos = np.zeros(2, dtype=np.int32)
@@ -82,7 +75,6 @@ class DiscreteAgent(Agent):
         tpos += self.motion_range[a]
         x = tpos[0]
         y = tpos[1]
-
         # check bounds
         if not self.inbounds(x, y):
             return cpos
