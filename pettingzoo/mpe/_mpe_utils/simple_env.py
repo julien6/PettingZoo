@@ -202,7 +202,7 @@ class SimpleEnv(AECEnv):
         from . import rendering
 
         if self.viewer is None:
-            self.viewer = rendering.Viewer(700, 700)
+            self.viewer = rendering.Viewer(700, 700, display=None, offscreen=mode == "rgb_array")
 
         # create rendering geometry
         if self.render_geoms is None:
